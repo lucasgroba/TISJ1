@@ -42,19 +42,20 @@ namespace PresentationLayerWinform
                 }
             }
 
-            _IBL = new BLEmployees(new DALEmployeesMock());
+            _IBL = new BLEmployees(new DALEmployeesEF());
         }
         public EmployeeAddEdit()
         {
             InitializeComponent();
             this.CantHoras.Visible = false;
 
-            _IBL = new BLEmployees(new DALEmployeesMock());
+            _IBL = new BLEmployees(new DALEmployeesEF());
         }
 
 
         private void LoadTextFull(FullTimeEmployee full)
         {
+            IsFullTime.Checked = true;
             Cedula.Text = full.Id.ToString();
             Nombre.Text = full.Name;
             FechaIng.Value = full.StartDate;
@@ -64,6 +65,7 @@ namespace PresentationLayerWinform
 
         private void LoadTextPart(PartTimeEmployee full)
         {
+            isPartTime.Checked = true;
             Cedula.Text = full.Id.ToString();
             Nombre.Text = full.Name;
             FechaIng.Value = full.StartDate;
@@ -95,14 +97,21 @@ namespace PresentationLayerWinform
                     nuevo.Id = int.Parse(this.Cedula.Text);
                     nuevo.Name = this.Nombre.Text;
                     nuevo.StartDate = this.FechaIng.Value;
-                    nuevo.SalXHora = int.Parse(Salario.Text);
                     nuevo.HourlyRate = int.Parse(CantHoras.Text);
                     if (edit) {
                         _IBL.UpdateEmployee(nuevo);
+                        EmployeeList ventana = new EmployeeList();
+                        ventana.Visible = true;
+                        this.Visible = false;
                     }
                     else
                     {
                         _IBL.AddEmployee(nuevo);
+                        EmployeeList ventana = new EmployeeList();
+                        ventana.Visible = true;
+                        this.Visible = false;
+                        
+
                     }
                     this.Cedula.Text = "";
                     this.Nombre.Text = "";
@@ -122,10 +131,16 @@ namespace PresentationLayerWinform
                         if (edit)
                         {
                             _IBL.UpdateEmployee(nuevo);
+                            EmployeeList ventana = new EmployeeList();
+                            ventana.Visible = true;
+                            this.Visible = false;
                         }
                         else
                         {
                             _IBL.AddEmployee(nuevo);
+                            EmployeeList ventana = new EmployeeList();
+                            ventana.Visible = true;
+                            this.Visible = false;
                         }
                         this.Cedula.Text = "";
                         this.Nombre.Text = "";
