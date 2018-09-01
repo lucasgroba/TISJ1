@@ -66,6 +66,8 @@
     <Compile Include="IServiceEmployees.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WebGetAttribute.cs" />
+    <Compile Include="WebInvokeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

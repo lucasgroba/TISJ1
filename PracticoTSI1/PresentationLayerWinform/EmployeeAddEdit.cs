@@ -1,6 +1,4 @@
-﻿using BusinessLogicLayer;
-using DataAccessLayer;
-using Shared.Entities;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,45 +13,47 @@ namespace PresentationLayerWinform
 {
     public partial class EmployeeAddEdit : Form
     {
-        private IBLEmployees _IBL;
-        private FullTimeEmployee full;
-        private PartTimeEmployee part;
+        ServiceEmployee.ServiceEmployeesClient servEmp;
+        //private IBLEmployees _IBL;
+        private ServiceEmployee.FullTimeEmployee full;
+        private ServiceEmployee.PartTimeEmployee part;
         private Boolean edit;
 
-        public EmployeeAddEdit(Employee emp)
+        public EmployeeAddEdit(ServiceEmployee.Employee emp)
         {
             InitializeComponent();
+            servEmp = new ServiceEmployee.ServiceEmployeesClient();
             this.CantHoras.Visible = false;
             this.edit = true;
 
             if (emp != null)
             {
-                if (emp is PartTimeEmployee)
+                if (emp is ServiceEmployee.PartTimeEmployee)
                 {
-                    part = (PartTimeEmployee)emp;
+                    part = (ServiceEmployee.PartTimeEmployee)emp;
                     this.LoadTextPart(part);
                     this.CantHoras.Visible = true;
                 }
                 else
                 {
-                    full = (FullTimeEmployee)emp;
+                    full = (ServiceEmployee.FullTimeEmployee)emp;
                     this.LoadTextFull(full);
                     this.CantHoras.Visible = false;
                 }
             }
-
-            _IBL = new BLEmployees(new DALEmployeesMock());
+            //_IBL = new BLEmployees(new DALEmployeesMock());
         }
         public EmployeeAddEdit()
         {
             InitializeComponent();
+            servEmp = new ServiceEmployee.ServiceEmployeesClient();
             this.CantHoras.Visible = false;
 
-            _IBL = new BLEmployees(new DALEmployeesMock());
+            //_IBL = new BLEmployees(new DALEmployeesMock());
         }
 
 
-        private void LoadTextFull(FullTimeEmployee full)
+        private void LoadTextFull(ServiceEmployee.FullTimeEmployee full)
         {
             Cedula.Text = full.Id.ToString();
             Nombre.Text = full.Name;
@@ -62,7 +62,7 @@ namespace PresentationLayerWinform
 
         }
 
-        private void LoadTextPart(PartTimeEmployee full)
+        private void LoadTextPart(ServiceEmployee.PartTimeEmployee full)
         {
             Cedula.Text = full.Id.ToString();
             Nombre.Text = full.Name;
@@ -91,18 +91,18 @@ namespace PresentationLayerWinform
         {
             if (this.Cedula != null && this.Nombre != null && FechaIng != null) {
                 if (this.isPartTime.Checked = true && this.IsFullTime.Checked != true) {
-                    PartTimeEmployee nuevo = new PartTimeEmployee();
+                    ServiceEmployee.PartTimeEmployee nuevo = new ServiceEmployee.PartTimeEmployee();
                     nuevo.Id = int.Parse(this.Cedula.Text);
                     nuevo.Name = this.Nombre.Text;
                     nuevo.StartDate = this.FechaIng.Value;
                     nuevo.SalXHora = int.Parse(Salario.Text);
                     nuevo.HourlyRate = int.Parse(CantHoras.Text);
                     if (edit) {
-                        _IBL.UpdateEmployee(nuevo);
+                        servEmp.UpdateEmployee(nuevo);
                     }
                     else
                     {
-                        _IBL.AddEmployee(nuevo);
+                        servEmp.AddEmployee(nuevo);
                     }
                     this.Cedula.Text = "";
                     this.Nombre.Text = "";
@@ -114,18 +114,18 @@ namespace PresentationLayerWinform
                 else
                 {
                     if (this.isPartTime.Checked != true && this.IsFullTime.Checked == true) {
-                        FullTimeEmployee nuevo = new FullTimeEmployee();
+                        ServiceEmployee.FullTimeEmployee nuevo = new ServiceEmployee.FullTimeEmployee();
                         nuevo.Id = int.Parse(this.Cedula.Text);
                         nuevo.Name = this.Nombre.Text;
                         nuevo.StartDate = this.FechaIng.Value;
                         nuevo.Salary = int.Parse(Salario.Text);
                         if (edit)
                         {
-                            _IBL.UpdateEmployee(nuevo);
+                            servEmp.UpdateEmployee(nuevo);
                         }
                         else
                         {
-                            _IBL.AddEmployee(nuevo);
+                            servEmp.AddEmployee(nuevo);
                         }
                         this.Cedula.Text = "";
                         this.Nombre.Text = "";

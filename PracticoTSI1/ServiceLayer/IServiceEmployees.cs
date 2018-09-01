@@ -13,16 +13,22 @@ namespace ServiceLayer
     public interface IServiceEmployees
     {
         [OperationContract]
+        [WebInvoke]
         void AddEmployee(Employee emp);
         [OperationContract]
+        [WebInvoke]
         void DeleteEmployee(int id);
         [OperationContract]
+        [WebInvoke]
         void UpdateEmployee(Employee emp);
         [OperationContract]
+        [WebGet]
         List<Employee> GetAllEmployees();
         [OperationContract]
+        [WebGet]
         Employee GetEmployee(int id);
         [OperationContract]
+        [WebGet]
         double CalcPartTimeEmployeeSalary(int idEmployee, int hours);
     }
 }

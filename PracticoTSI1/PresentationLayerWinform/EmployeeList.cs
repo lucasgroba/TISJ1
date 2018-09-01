@@ -1,6 +1,4 @@
-﻿using BusinessLogicLayer;
-using DataAccessLayer;
-using Shared.Entities;
+﻿
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,24 +13,27 @@ namespace PresentationLayerWinform
 {
     public partial class EmployeeList : Form
     {
-        private IBLEmployees _IBL;
+        //private IBLEmployees _IBL;
+        ServiceEmployee.ServiceEmployeesClient servEmp;
         private int id;
         public EmployeeList()
         {
             InitializeComponent();
-            _IBL = new BLEmployees(new DALEmployeesMock());
+            servEmp = new ServiceEmployee.ServiceEmployeesClient();
+            //_IBL = new BLEmployees(new DALEmployeesMock());
         }
 
         private void EmployeeList_Load(object sender, EventArgs e)
         {
-            List <Employee> listaEmp =_IBL.GetAllEmployees();
-            foreach (Employee emp in listaEmp) {
-                ListViewItem item = new ListViewItem();
-                item.Text = emp.Id.ToString();
-                item.SubItems.Add(emp.Name);
-                item.SubItems.Add(emp.StartDate.ToString());
-                this.ListEmp.Items.Add(item);
-            }
+                
+                ServiceEmployee.Employee[] listaEmp = servEmp.GetAllEmployees();
+                foreach (ServiceEmployee.Employee emp in listaEmp) {
+                    ListViewItem item = new ListViewItem();
+                    item.Text = emp.Id.ToString();
+                    item.SubItems.Add(emp.Name);
+                    item.SubItems.Add(emp.StartDate.ToString());
+                    this.ListEmp.Items.Add(item);
+                }
         }
 
         
@@ -48,7 +49,7 @@ namespace PresentationLayerWinform
 
         private void Editar_Click(object sender, EventArgs e)
         {
-            EmployeeAddEdit nuevo = new EmployeeAddEdit(_IBL.GetEmployee(this.id));
+            EmployeeAddEdit nuevo = new EmployeeAddEdit(servEmp.GetEmployee(this.id));
             nuevo.Visible = true;
         }
 
