@@ -21,7 +21,7 @@ namespace ServiceLayer
 
         private static void SetupDependencies()
         {
-            blHandler = new BLEmployees(new DataAccessLayer.DALEmployeesEF());
+            blHandler = new BLEmployees(new DataAccessLayer.DALEmployeesNativeSQL());
         }
 
     private static void SetupService()

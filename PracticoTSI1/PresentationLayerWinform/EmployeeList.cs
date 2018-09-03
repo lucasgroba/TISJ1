@@ -19,7 +19,7 @@ namespace PresentationLayerWinform
         public EmployeeList()
         {
             InitializeComponent();
-            servEmp = new ServiceEmployee.ServiceEmployeesClient();
+            //servEmp = new ServiceEmployee.ServiceEmployeesClient();
             //_IBL = new BLEmployees(new DALEmployeesMock());
         }
 
