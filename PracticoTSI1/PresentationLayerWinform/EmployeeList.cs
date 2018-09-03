@@ -20,7 +20,7 @@ namespace PresentationLayerWinform
         public EmployeeList()
         {
             InitializeComponent();
-            _IBL = new BLEmployees(new DALEmployeesMock());
+            _IBL = new BLEmployees(new DALEmployeesEF());
         }
 
         private void EmployeeList_Load(object sender, EventArgs e)

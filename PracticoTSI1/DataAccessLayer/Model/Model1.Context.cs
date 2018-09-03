@@ -13,12 +13,11 @@ namespace DataAccessLayer.Model
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class TESTEntities : DbContext
+    public partial class TESTEntitiesFinal : DbContext
     {
-        public TESTEntities()
-            : base("name=TESTEntities")
+        public TESTEntitiesFinal()
+            : base("name=TESTEntitiesFinal")
         {
-            Employees = Set<Employee>();
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -26,6 +25,6 @@ namespace DataAccessLayer.Model
             throw new UnintentionalCodeFirstException();
         }
     
-        internal virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
     }
 }
