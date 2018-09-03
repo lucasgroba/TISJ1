@@ -55,6 +55,7 @@ namespace PresentationLayerWinform
 
         private void LoadTextFull(ServiceEmployee.FullTimeEmployee full)
         {
+            IsFullTime.Checked = true;
             Cedula.Text = full.Id.ToString();
             Nombre.Text = full.Name;
             FechaIng.Value = full.StartDate;
@@ -64,6 +65,7 @@ namespace PresentationLayerWinform
 
         private void LoadTextPart(ServiceEmployee.PartTimeEmployee full)
         {
+            isPartTime.Checked = true;
             Cedula.Text = full.Id.ToString();
             Nombre.Text = full.Name;
             FechaIng.Value = full.StartDate;
@@ -95,14 +97,19 @@ namespace PresentationLayerWinform
                     nuevo.Id = int.Parse(this.Cedula.Text);
                     nuevo.Name = this.Nombre.Text;
                     nuevo.StartDate = this.FechaIng.Value;
-                    nuevo.SalXHora = int.Parse(Salario.Text);
                     nuevo.HourlyRate = int.Parse(CantHoras.Text);
                     if (edit) {
                         servEmp.UpdateEmployee(nuevo);
+                        EmployeeList ventana = new EmployeeList();
+                        ventana.Visible = true;
+                        this.Visible = false;
                     }
                     else
                     {
                         servEmp.AddEmployee(nuevo);
+                        EmployeeList ventana = new EmployeeList();
+                        ventana.Visible = true;
+                        this.Visible = false;
                     }
                     this.Cedula.Text = "";
                     this.Nombre.Text = "";
@@ -122,10 +129,16 @@ namespace PresentationLayerWinform
                         if (edit)
                         {
                             servEmp.UpdateEmployee(nuevo);
+                            EmployeeList ventana = new EmployeeList();
+                            ventana.Visible = true;
+                            this.Visible = false;
                         }
                         else
                         {
                             servEmp.AddEmployee(nuevo);
+                            EmployeeList ventana = new EmployeeList();
+                            ventana.Visible = true;
+                            this.Visible = false;
                         }
                         this.Cedula.Text = "";
                         this.Nombre.Text = "";

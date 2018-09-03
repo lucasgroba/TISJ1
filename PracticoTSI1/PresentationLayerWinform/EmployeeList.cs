@@ -43,6 +43,7 @@ namespace PresentationLayerWinform
         private void Nuevo_Click(object sender, EventArgs e)
         {
             EmployeeAddEdit nuevo = new EmployeeAddEdit();
+            this.Visible = false;
             nuevo.Visible = true;
 
         }
@@ -50,6 +51,7 @@ namespace PresentationLayerWinform
         private void Editar_Click(object sender, EventArgs e)
         {
             EmployeeAddEdit nuevo = new EmployeeAddEdit(servEmp.GetEmployee(this.id));
+            this.Visible = false;
             nuevo.Visible = true;
         }
 

@@ -11,7 +11,7 @@ namespace DataAccessLayer
     {
         public void AddEmployee(Employee emp)
         {
-            using (Model.TESTEntities DB = new Model.TESTEntities())
+            using (Model.TESTEntitiesFinal DB = new Model.TESTEntitiesFinal())
             {
                 if (emp is PartTimeEmployee)
                 {
@@ -39,7 +39,7 @@ namespace DataAccessLayer
 
         public void DeleteEmployee(int id)
         {
-            using (Model.TESTEntities DB = new Model.TESTEntities())
+            using (Model.TESTEntitiesFinal DB = new Model.TESTEntitiesFinal())
             {
                 DB.Employees.Remove(DB.Employees.Find(id));
                 DB.SaveChanges();
@@ -49,7 +49,7 @@ namespace DataAccessLayer
 
         public void UpdateEmployee(Employee emp)
         {
-            using (Model.TESTEntities DB = new Model.TESTEntities()) {
+            using (Model.TESTEntitiesFinal DB = new Model.TESTEntitiesFinal()) {
                 if(emp != null)
                 {
                     if (emp != null) {
@@ -83,7 +83,7 @@ namespace DataAccessLayer
         public List<Employee> GetAllEmployees()
         {
             List<Employee> lista = new List<Employee>();
-            using (Model.TESTEntities DB = new Model.TESTEntities())
+            using (Model.TESTEntitiesFinal DB = new Model.TESTEntitiesFinal())
             {
                 var ListEmp = (from e in DB.Employees select e).ToList() ;
                 foreach (Model.Employee emp in ListEmp) {
@@ -117,7 +117,7 @@ namespace DataAccessLayer
 
         public Employee GetEmployee(int id)
         {
-            using (Model.TESTEntities DB = new Model.TESTEntities())
+            using (Model.TESTEntitiesFinal DB = new Model.TESTEntitiesFinal())
             {
                 var ListEmp = (from e in DB.Employees where e.EmployeeId == id select e).ToList();
                 foreach (Model.Employee emp in ListEmp){
