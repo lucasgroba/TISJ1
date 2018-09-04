@@ -1,4 +1,7 @@
 ﻿
+using BusinessLogicLayer;
+using DataAccessLayer;
+using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,21 +16,21 @@ namespace PresentationLayerWinform
 {
     public partial class EmployeeList : Form
     {
-        //private IBLEmployees _IBL;
-        ServiceEmployee.ServiceEmployeesClient servEmp;
+        private IBLEmployees _IBL;
+        //ServiceEmployee.ServiceEmployeesClient servEmp;
         private int id;
         public EmployeeList()
         {
             InitializeComponent();
             //servEmp = new ServiceEmployee.ServiceEmployeesClient();
-            //_IBL = new BLEmployees(new DALEmployeesMock());
+            _IBL = new BLEmployees(new DALEmployeesNativeSQL());
         }
 
         private void EmployeeList_Load(object sender, EventArgs e)
         {
                 
-                ServiceEmployee.Employee[] listaEmp = servEmp.GetAllEmployees();
-                foreach (ServiceEmployee.Employee emp in listaEmp) {
+                List<Employee> listaEmp = _IBL.GetAllEmployees();
+                foreach (Employee emp in listaEmp) {
                     ListViewItem item = new ListViewItem();
                     item.Text = emp.Id.ToString();
                     item.SubItems.Add(emp.Name);
@@ -50,7 +53,7 @@ namespace PresentationLayerWinform
 
         private void Editar_Click(object sender, EventArgs e)
         {
-            EmployeeAddEdit nuevo = new EmployeeAddEdit(servEmp.GetEmployee(this.id));
+            EmployeeAddEdit nuevo = new EmployeeAddEdit(_IBL.GetEmployee(this.id));
             this.Visible = false;
             nuevo.Visible = true;
         }
