@@ -15,7 +15,7 @@ namespace DataAccessLayer
             {
                 if (emp is PartTimeEmployee)
                 {
-                    PartTimeEmployee empLP = new PartTimeEmployee();
+                    PartTimeEmployee empLP = (PartTimeEmployee) emp;
                     Model.PartTimeEmployee nuevo = new Model.PartTimeEmployee();
                     nuevo.EmployeeId = empLP.Id;
                     nuevo.Name = empLP.Name;
@@ -25,7 +25,7 @@ namespace DataAccessLayer
 
                 }
                 else {
-                    FullTimeEmployee empLP = new FullTimeEmployee();
+                    FullTimeEmployee empLP = (FullTimeEmployee) emp;
                     Model.FullTimeEmployee nuevo = new Model.FullTimeEmployee();
                     nuevo.EmployeeId = empLP.Id;
                     nuevo.Name = empLP.Name;
@@ -53,24 +53,27 @@ namespace DataAccessLayer
                 if(emp != null)
                 {
                     if (emp != null) {
-                            Model.Employee EmpDB =DB.Employees.Find(emp.Id);
-                        if (EmpDB is Model.PartTimeEmployee) {
-                            PartTimeEmployee empLP = (PartTimeEmployee)emp;
-                            Model.PartTimeEmployee nuevo = (Model.PartTimeEmployee)EmpDB;
-                            nuevo.Name = empLP.Name;
-                            nuevo.StartDate = empLP.StartDate;
-                            nuevo.HourlyRate = empLP.HourlyRate;
-                            DB.Employees.Attach(nuevo);
+                        this.DeleteEmployee(emp.Id);
+                        this.AddEmployee(emp);
+                        if (emp is PartTimeEmployee) {
+                            //PartTimeEmployee empLP = (PartTimeEmployee)emp;
+                            //Model.PartTimeEmployee nuevo = new Model.PartTimeEmployee();
+                            //nuevo.Name = empLP.Name;
+                            //nuevo.StartDate = empLP.StartDate;
+                            //nuevo.HourlyRate = empLP.HourlyRate;
+                            //DB.Employees.Attach(nuevo);
+
 
                         }
                         else
                         {
-                            FullTimeEmployee empLP = (FullTimeEmployee)emp;
-                            Model.FullTimeEmployee nuevo = (Model.FullTimeEmployee)EmpDB;
-                            nuevo.Name = empLP.Name;
-                            nuevo.StartDate = empLP.StartDate;
-                            nuevo.Salary = empLP.Salary;
-                            DB.Employees.Attach(nuevo);
+
+                            //FullTimeEmployee empLP = (FullTimeEmployee)emp;
+                            //Model.FullTimeEmployee nuevo = new Model.FullTimeEmployee();
+                            //nuevo.Name = empLP.Name;
+                            //nuevo.StartDate = empLP.StartDate;
+                            //nuevo.Salary = empLP.Salary;
+                            //DB.Employees.Attach(nuevo);
                         }
                         DB.SaveChanges();
 

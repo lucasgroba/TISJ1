@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Configuration;
 namespace DataAccessLayer
 {
     public class DALEmployeesNativeSQL : IDALEmployees
@@ -16,36 +16,47 @@ namespace DataAccessLayer
 
         public void AddEmployee(Employee emp)
         {
-            using (var ctx = new Model.TESTEntitiesFinal())
+            String query;
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["TESTEntitiesFinal"].ConnectionString))
             {
-                
-                if (emp is PartTimeEmployee) {
+                con.Open();
+
+                if (emp is PartTimeEmployee)
+                {
                     PartTimeEmployee Temp = (PartTimeEmployee)emp;
-                    int rows = ctx.Database.ExecuteSqlCommand("INSERT INTO Employee (Emp_Id, Name, Start_date,Rate, Type_Emp) values (" +
-                    Temp.Id.ToString() + " ," +
-                    Temp.Name.ToString() + " ," +
-                    Temp.StartDate.ToString() + " ," +
+                    query = "INSERT INTO Employee (Emp_Id, Name, Start_date,Rate, Type_Emp) values (" +
+                    Temp.Id.ToString() + " ," +"'"+
+                    Temp.Name.ToString()+ "'"+ " ," + "'" +
+                    Temp.StartDate.Day.ToString() + "/" + Temp.StartDate.Month.ToString() + "/" + Temp.StartDate.Year.ToString() + "'" + " ," +
                     Temp.HourlyRate.ToString() + " ," + " 1 "
-                    + ")");
+                    + ")";
                 }
                 else
                 {
                     FullTimeEmployee Temp = (FullTimeEmployee)emp;
-                    int rows = ctx.Database.ExecuteSqlCommand("INSERT INTO Employee (Emp_Id, Name, Start_date,Salary, Type_Emp) values (" +
-                    Temp.Id.ToString() + " ," +
-                    Temp.Name.ToString() + " ," +
-                    Temp.StartDate.ToString() + " ," +
+                    query = "INSERT INTO Employee (Emp_Id, Name, Start_date,Salary, Type_Emp) values (" +"'"+
+                    Temp.Id.ToString() + " ," +"'"+
+                    Temp.Name.ToString() +"'"+ " ," +"'"+
+                    Temp.StartDate.Day.ToString()+ "/"+Temp.StartDate.Month.ToString() + "/"+Temp.StartDate.Year.ToString()+"'"+ " ," +
                     Temp.Salary.ToString() + " ," + " 0 "
-                    + ")");
+                    + ")";
                 }
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.ExecuteNonQuery();
             }
 
         }
 
         public void DeleteEmployee(int id)
         {
-            using (var ctx = new Model.TESTEntitiesFinal()) {
-                int rows = ctx.Database.ExecuteSqlCommand("DELETE FROM Employee WHERE Emp_Id = " + id.ToString());
+            String query;
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["TESTEntitiesFinal"].ConnectionString))
+            {
+                con.Open();
+                query = "DELETE FROM Employee WHERE Emp_Id = " + id.ToString();
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.ExecuteNonQuery();
+
             }
 
 
@@ -54,24 +65,31 @@ namespace DataAccessLayer
 
         public void UpdateEmployee(Employee emp)
         {
-            using (var ctx = new Model.TESTEntitiesFinal()) {
+            String query;
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["TESTEntitiesFinal"].ConnectionString))
+            {
+                con.Open();
                 if (emp is PartTimeEmployee)
                 {
                     PartTimeEmployee Temp = (PartTimeEmployee)emp;
-                    int rows = ctx.Database.ExecuteSqlCommand("UPDATE Employee SET Name = "+
-                        Temp.Name.ToString() + " ," +
-                        "Start_date = "+ Temp.StartDate.ToString() + " ," +
-                        "Rate = "+ Temp.HourlyRate.ToString() +" Type_Emp = 1");
+                        query = "UPDATE Employee SET Name = " +"'"+
+                    Temp.Name.ToString() +"'"+ " ," + "Start_date =" + "'" +
+                    Temp.StartDate.Day.ToString() + "/" + Temp.StartDate.Month.ToString() + "/" + Temp.StartDate.Year.ToString() + "'"+ " ," +
+                        "Rate = " + Temp.HourlyRate.ToString() + ", Type_Emp = 1"+ "WHERE Emp_id ="+Temp.Id.ToString();
 
                 }
-                else {
+                else
+                {
                     FullTimeEmployee Temp = (FullTimeEmployee)emp;
-                    int rows = ctx.Database.ExecuteSqlCommand("UPDATE Employee SET Name = " +
-                        Temp.Name.ToString() + " ," +
-                        " Start_date = " + Temp.StartDate.ToString() + " ," +
-                        " Salary = " + Temp.Salary.ToString() + " Type_Emp = 0");
+                        query = "UPDATE Employee SET Name = " +"'"+
+                    Temp.Name.ToString() +"'"+ " ,"+"Start_date =" + "'" +
+                    Temp.StartDate.Day.ToString() + "/" + Temp.StartDate.Month.ToString() + "/" + Temp.StartDate.Year.ToString() + "'" + " ," +
+                        " Salary = " + Temp.Salary.ToString() + ", Type_Emp = 0" + "WHERE Emp_id =" + Temp.Id.ToString();
 
                 }
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.ExecuteNonQuery();
+
 
             }
         }
@@ -79,60 +97,78 @@ namespace DataAccessLayer
         public List<Employee> GetAllEmployees()
         {
             List<Employee> listaEmp = new List<Employee>();
-            using (var ctx = new Model.TESTEntitiesFinal())
+          
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["TESTEntitiesFinal"].ConnectionString))
             {
-                var EmployeeList = ctx.Employees.SqlQuery("SELECT * FROM Employee ").ToList();
-                foreach (var empDB in EmployeeList) {
-                    if (empDB is Model.PartTimeEmployee)
-                    {
-                        Model.PartTimeEmployee emp = (Model.PartTimeEmployee)empDB;
-                        PartTimeEmployee nuevo = new PartTimeEmployee();
-                        nuevo.Id = emp.EmployeeId;
-                        nuevo.Name = emp.Name;
-                        nuevo.StartDate = emp.StartDate;
-                        nuevo.HourlyRate = (Double)emp.HourlyRate;
-                        listaEmp.Add(nuevo);
-                    }
-                    else {
-                        Model.FullTimeEmployee emp = (Model.FullTimeEmployee)empDB;
-                        FullTimeEmployee nuevo = new FullTimeEmployee();
-                        nuevo.Id = emp.EmployeeId;
-                        nuevo.Name = emp.Name;
-                        nuevo.StartDate = emp.StartDate;
-                        nuevo.Salary =(int)emp.Salary;
-                        listaEmp.Add(nuevo);
-                    }
+                con.Open();
 
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Employee", con);
+                SqlDataReader dr = cmd.ExecuteReader();
+                if (dr.HasRows) {
+                    while (dr.Read())
+                    {
+                        if (Convert.ToInt32(dr["Type_Emp"]) == 0)
+                        {
+                            FullTimeEmployee emp = new FullTimeEmployee();
+                            emp.Id = Convert.ToInt32(dr["Emp_id"]);
+                            emp.Name = Convert.ToString(dr["Name"]);
+                            emp.Salary = Convert.ToInt32(dr["Salary"]);
+                            emp.StartDate = Convert.ToDateTime(dr["Start_Date"]);
+                            listaEmp.Add(emp);
+                        }
+                        else
+                        {
+                            PartTimeEmployee emp = new PartTimeEmployee();
+                            emp.Id = Convert.ToInt32(dr["Emp_id"]);
+                            emp.Name = Convert.ToString(dr["Name"]);
+                            emp.HourlyRate = Convert.ToDouble(dr["Rate"]);
+                            emp.StartDate = Convert.ToDateTime(dr["Start_Date"]);
+                            listaEmp.Add(emp);
+                        }
+
+
+                    }
                 }
 
+                
                 return listaEmp;
             }
         }
 
         public Employee GetEmployee(int id)
         {
-            using (var ctx = new Model.TESTEntitiesFinal())
+            using (SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["TESTEntitiesFinal"].ConnectionString))
             {
-                var empleado = ctx.Employees.SqlQuery("SELECT * FROM Employee WHERE Emp_id = @id ", new SqlParameter("@id", id)).FirstOrDefault();
-                if (empleado is Model.PartTimeEmployee)
+                con.Open();
+
+                SqlCommand cmd = new SqlCommand("SELECT * FROM Employee WHERE Emp_id = "+id.ToString(), con);
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (dr.Read())
                 {
-                    Model.PartTimeEmployee emp = (Model.PartTimeEmployee)empleado;
-                    PartTimeEmployee nuevo = new PartTimeEmployee();
-                    nuevo.Id = emp.EmployeeId;
-                    nuevo.Name = emp.Name;
-                    nuevo.StartDate = emp.StartDate;
-                    nuevo.HourlyRate = (Double)emp.HourlyRate;
-                    return nuevo;
+                    if (Convert.ToInt32(dr["Type_Emp"]) == 0) {
+                        FullTimeEmployee emp = new FullTimeEmployee();
+                        emp.Id = Convert.ToInt32(dr["Emp_id"]);
+                        emp.Name = Convert.ToString(dr["Name"]);
+                        emp.Salary = Convert.ToInt32(dr["Salary"]);
+                        emp.StartDate = Convert.ToDateTime(dr["Start_Date"]);
+                        return emp;
+                    }
+                    else
+                    {
+                        PartTimeEmployee emp = new PartTimeEmployee();
+                        emp.Id = Convert.ToInt32(dr["Emp_id"]);
+                        emp.Name = Convert.ToString(dr["Name"]);
+                        emp.HourlyRate = Convert.ToDouble(dr["Rate"]);
+                        emp.StartDate = Convert.ToDateTime(dr["Start_Date"]);
+                        return emp;
+                    }
+                    
+
                 }
                 else
                 {
-                    Model.FullTimeEmployee emp = (Model.FullTimeEmployee)empleado;
-                    FullTimeEmployee nuevo = new FullTimeEmployee();
-                    nuevo.Id = emp.EmployeeId;
-                    nuevo.Name = emp.Name;
-                    nuevo.StartDate = emp.StartDate;
-                    nuevo.Salary = (int)emp.Salary;
-                    return nuevo;
+                    return null;
                 }
             }
         }

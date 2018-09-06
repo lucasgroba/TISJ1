@@ -1,4 +1,7 @@
 ﻿
+using BusinessLogicLayer;
+using DataAccessLayer;
+using Shared.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,47 +16,47 @@ namespace PresentationLayerWinform
 {
     public partial class EmployeeAddEdit : Form
     {
-        ServiceEmployee.ServiceEmployeesClient servEmp;
-        //private IBLEmployees _IBL;
-        private ServiceEmployee.FullTimeEmployee full;
-        private ServiceEmployee.PartTimeEmployee part;
+        //ServiceEmployee.ServiceEmployeesClient servEmp;
+        private IBLEmployees _IBL;
+        private FullTimeEmployee full;
+        private PartTimeEmployee part;
         private Boolean edit;
 
-        public EmployeeAddEdit(ServiceEmployee.Employee emp)
+        public EmployeeAddEdit(Employee emp)
         {
             InitializeComponent();
-            servEmp = new ServiceEmployee.ServiceEmployeesClient();
+            //servEmp = new ServiceEmployee.ServiceEmployeesClient();
             this.CantHoras.Visible = false;
             this.edit = true;
 
             if (emp != null)
             {
-                if (emp is ServiceEmployee.PartTimeEmployee)
+                if (emp is PartTimeEmployee)
                 {
-                    part = (ServiceEmployee.PartTimeEmployee)emp;
+                    part = (PartTimeEmployee)emp;
                     this.LoadTextPart(part);
                     this.CantHoras.Visible = true;
                 }
                 else
                 {
-                    full = (ServiceEmployee.FullTimeEmployee)emp;
+                    full= (FullTimeEmployee)emp;
                     this.LoadTextFull(full);
                     this.CantHoras.Visible = false;
                 }
             }
-            //_IBL = new BLEmployees(new DALEmployeesMock());
+            _IBL = new BLEmployees(new DALEmployeesNativeSQL());
         }
         public EmployeeAddEdit()
         {
             InitializeComponent();
-            servEmp = new ServiceEmployee.ServiceEmployeesClient();
+            //servEmp = new ServiceEmployee.ServiceEmployeesClient();
             this.CantHoras.Visible = false;
 
-            //_IBL = new BLEmployees(new DALEmployeesMock());
+            _IBL = new BLEmployees(new DALEmployeesNativeSQL());
         }
 
 
-        private void LoadTextFull(ServiceEmployee.FullTimeEmployee full)
+        private void LoadTextFull(FullTimeEmployee full)
         {
             IsFullTime.Checked = true;
             Cedula.Text = full.Id.ToString();
@@ -63,7 +66,7 @@ namespace PresentationLayerWinform
 
         }
 
-        private void LoadTextPart(ServiceEmployee.PartTimeEmployee full)
+        private void LoadTextPart(PartTimeEmployee full)
         {
             isPartTime.Checked = true;
             Cedula.Text = full.Id.ToString();
@@ -93,20 +96,22 @@ namespace PresentationLayerWinform
         {
             if (this.Cedula != null && this.Nombre != null && FechaIng != null) {
                 if (this.isPartTime.Checked = true && this.IsFullTime.Checked != true) {
-                    ServiceEmployee.PartTimeEmployee nuevo = new ServiceEmployee.PartTimeEmployee();
+                    PartTimeEmployee nuevo = new PartTimeEmployee();
                     nuevo.Id = int.Parse(this.Cedula.Text);
                     nuevo.Name = this.Nombre.Text;
                     nuevo.StartDate = this.FechaIng.Value;
                     nuevo.HourlyRate = int.Parse(CantHoras.Text);
                     if (edit) {
-                        servEmp.UpdateEmployee(nuevo);
+                        _IBL.UpdateEmployee(nuevo);
+                        //servEmp.UpdateEmployee(nuevo);
                         EmployeeList ventana = new EmployeeList();
                         ventana.Visible = true;
                         this.Visible = false;
                     }
                     else
                     {
-                        servEmp.AddEmployee(nuevo);
+                        //servEmp.AddEmployee(nuevo);
+                        _IBL.AddEmployee(nuevo);
                         EmployeeList ventana = new EmployeeList();
                         ventana.Visible = true;
                         this.Visible = false;
@@ -121,21 +126,23 @@ namespace PresentationLayerWinform
                 else
                 {
                     if (this.isPartTime.Checked != true && this.IsFullTime.Checked == true) {
-                        ServiceEmployee.FullTimeEmployee nuevo = new ServiceEmployee.FullTimeEmployee();
+                        FullTimeEmployee nuevo = new FullTimeEmployee();
                         nuevo.Id = int.Parse(this.Cedula.Text);
                         nuevo.Name = this.Nombre.Text;
                         nuevo.StartDate = this.FechaIng.Value;
                         nuevo.Salary = int.Parse(Salario.Text);
                         if (edit)
                         {
-                            servEmp.UpdateEmployee(nuevo);
+                            //servEmp.UpdateEmployee(nuevo);
+                            _IBL.UpdateEmployee(nuevo);
                             EmployeeList ventana = new EmployeeList();
                             ventana.Visible = true;
                             this.Visible = false;
                         }
                         else
                         {
-                            servEmp.AddEmployee(nuevo);
+                            //servEmp.AddEmployee(nuevo);
+                            _IBL.AddEmployee(nuevo);
                             EmployeeList ventana = new EmployeeList();
                             ventana.Visible = true;
                             this.Visible = false;
