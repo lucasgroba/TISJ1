@@ -44,7 +44,7 @@ namespace PresentationLayerWinform
                     this.CantHoras.Visible = false;
                 }
             }
-            _IBL = new BLEmployees(new DALEmployeesEF());
+            _IBL = new BLEmployees(new DALEmployeesNativeSQL());
         }
         public EmployeeAddEdit()
         {
@@ -52,7 +52,7 @@ namespace PresentationLayerWinform
             //servEmp = new ServiceEmployee.ServiceEmployeesClient();
             this.CantHoras.Visible = false;
 
-            _IBL = new BLEmployees(new DALEmployeesEF());
+            _IBL = new BLEmployees(new DALEmployeesNativeSQL());
         }
 
 

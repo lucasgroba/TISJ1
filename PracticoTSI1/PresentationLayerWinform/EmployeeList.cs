@@ -23,7 +23,8 @@ namespace PresentationLayerWinform
         {
             InitializeComponent();
             //servEmp = new ServiceEmployee.ServiceEmployeesClient();
-            _IBL = new BLEmployees(new DALEmployeesNativeSQL());
+            _IBL = new BLEmployees(new DALEmployeesEF());
+            this.id = 0;
         }
 
         private void EmployeeList_Load(object sender, EventArgs e)
@@ -53,9 +54,13 @@ namespace PresentationLayerWinform
 
         private void Editar_Click(object sender, EventArgs e)
         {
-            EmployeeAddEdit nuevo = new EmployeeAddEdit(_IBL.GetEmployee(this.id));
-            this.Visible = false;
-            nuevo.Visible = true;
+            if(this.id != 0)
+            {
+                EmployeeAddEdit nuevo = new EmployeeAddEdit(_IBL.GetEmployee(this.id));
+                this.Visible = false;
+                nuevo.Visible = true;
+            }
+            
         }
 
         private void ListEmp_MouseClick(object sender, MouseEventArgs e)
