@@ -11,7 +11,31 @@
     <title>Index</title>
 </head>
 <body>
-    <div> 
+    <div id=" container">
+        <h1>LISTA DE EMPLOYEE</h1>
+        <div class="col-md-4">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var employee in Model)
+                    {
+
+                    <tr>
+                        <td>@employee.id</td>
+                        <td>@employee.name</td>
+                        <td><a href="@Url.Action("Edit", "Employee", new { id = @employee.id })"><span>EDITAR</span></a></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <a href="@Url.Action("Add", "Employee", null)"><span>NUEVO</span></a>
+</div>
     </div>
 </body>
 </html>

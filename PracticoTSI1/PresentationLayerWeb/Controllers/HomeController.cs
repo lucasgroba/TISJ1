@@ -1,6 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Shared.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -8,8 +13,9 @@ namespace PresentationLayerWeb.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
+            
             return View();
         }
 

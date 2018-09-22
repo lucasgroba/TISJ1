@@ -194,10 +194,14 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Employee\Index.cshtml" />
+    <Content Include="Views\Employee\Add.cshtml" />
+    <Content Include="Views\Employee\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Code\" />
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
+    <Folder Include="Scripts\JS\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -214,6 +218,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CrossCutting\Shared.csproj">
+      <Project>{8B1E409E-8EB8-4171-8D99-5DB230DA4889}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

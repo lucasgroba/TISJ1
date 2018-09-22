@@ -1,5 +1,6 @@
 ﻿using BusinessLogicLayer;
 using Shared.Entities;
+using Shared.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,33 +19,142 @@ namespace WebServicesREST.Controllers
 
         public IHttpActionResult Get()
         {
-            List<Employee> lista = blHandler.GetAllEmployees();
-            return Ok(lista);
+
+            List<Employee> lisEmp = blHandler.GetAllEmployees();
+            List<DTOEmployee> DTOlist = new List<DTOEmployee>();
+            for(int i =0; i<lisEmp.Count(); i++)
+            {
+                DTOEmployee emp = new DTOEmployee();
+
+                if (lisEmp[i] is FullTimeEmployee)
+                {
+                    FullTimeEmployee lista = (FullTimeEmployee)lisEmp[i];
+                    emp.full = true;
+                    emp.id = lista.Id;
+                    emp.name = lista.Name;
+                    emp.Salary = lista.Salary;
+                    emp.StartDate = lista.StartDate;
+                    DTOlist.Add(emp);
+
+                }
+                else
+                {
+                    PartTimeEmployee lista = (PartTimeEmployee)lisEmp[i];
+                    emp.full = true;
+                    emp.id = lista.Id;
+                    emp.name = lista.Name;
+                    emp.HourlyRate = lista.HourlyRate;
+                    emp.StartDate = lista.StartDate;
+                    DTOlist.Add(emp);
+                }
+            }
+            return Ok(DTOlist);
         }
 
         public IHttpActionResult Get(int id)
         {
-            Employee lista = blHandler.GetEmployee(id);
-            return Ok(lista);
+            Employee lisEmp = blHandler.GetEmployee(id);
+            DTOEmployee emp = new DTOEmployee();
+
+            if (lisEmp is FullTimeEmployee)
+            {
+                FullTimeEmployee lista = (FullTimeEmployee)lisEmp;
+                emp.full = true;
+                emp.id = lista.Id;
+                emp.name = lista.Name;
+                emp.Salary = lista.Salary;
+                emp.StartDate = lista.StartDate;
+
+            }
+            else {
+                PartTimeEmployee lista = (PartTimeEmployee)lisEmp;
+                emp.full = true;
+                emp.id = lista.Id;
+                emp.name = lista.Name;
+                emp.HourlyRate = lista.HourlyRate;
+                emp.StartDate = lista.StartDate;
+            }
+            
+            return Ok(emp);
         }
 
-        public HttpResponseMessage Post(Employee emp)
+        public HttpResponseMessage Post([FromBody]DTOEmployee emp)
         {
-            blHandler.AddEmployee(emp);
-
-            return new HttpResponseMessage()
+            if (emp != null)
             {
-                Content = new StringContent("Employee Creado Correctamente ")
-            };
+                if (emp.full)
+                {
+                    FullTimeEmployee full = new FullTimeEmployee();
+                    full.Id = emp.id;
+                    full.Name = emp.name;
+                    full.Salary = emp.Salary;
+                    full.StartDate = emp.StartDate;
+                    blHandler.AddEmployee(full);
+                    return new HttpResponseMessage()
+                    {
+                        Content = new StringContent("200")
+                    };
+                }
+                else
+                {
+                    PartTimeEmployee full = new PartTimeEmployee();
+                    full.Id = emp.id;
+                    full.Name = emp.name;
+                    full.HourlyRate = emp.HourlyRate;
+                    full.StartDate = emp.StartDate;
+                    blHandler.AddEmployee(full);
+                    return new HttpResponseMessage()
+                    {
+                        Content = new StringContent("200")
+                    };
+                }
+            }
+            else {
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent("400")
+                };
+            }
+
         }
 
-        public HttpResponseMessage Put(Employee emp)
+        public HttpResponseMessage Put([FromBody]DTOEmployee emp)
         {
-            blHandler.UpdateEmployee(emp);
-            return new HttpResponseMessage()
+            if (emp != null) { 
+                if (emp.full)
+                {
+                    FullTimeEmployee full = new FullTimeEmployee();
+                    full.Id = emp.id;
+                    full.Name = emp.name;
+                    full.Salary = emp.Salary;
+                    full.StartDate = emp.StartDate;
+                    blHandler.UpdateEmployee(full);
+                    return new HttpResponseMessage()
+                    {
+                        Content = new StringContent("200")
+                    };
+                }
+                else
+                {
+                    PartTimeEmployee full = new PartTimeEmployee();
+                    full.Id = emp.id;
+                    full.Name = emp.name;
+                    full.HourlyRate = emp.HourlyRate;
+                    full.StartDate = emp.StartDate;
+                    blHandler.UpdateEmployee(full);
+                    return new HttpResponseMessage()
+                    {
+                        Content = new StringContent("200")
+                    };
+                }
+            }
+            else
             {
-                Content = new StringContent("Employee Modificado Correctamente")
-            };
+                return new HttpResponseMessage()
+                {
+                    Content = new StringContent("400")
+                };
+            }
         }
         public HttpResponseMessage Delete(int id )
         {
